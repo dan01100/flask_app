@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Fight predictor</title>
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script src="static/js/fighters_names.js"></script>
+  <script>
+  $( function() {
+    $( "#fighter1" ).autocomplete({
+      source: names
+    });
+    $( "#fighter2" ).autocomplete({
+      source: names
+    });
+
+  } );
+  </script>
+</head>
+<body>
+
+  <p>Choose 2 fighters from the same weight class:</p>
+ 
+  <div>
+    <label for="fighter1">Fighter 1: </label>
+    <input id="fighter1">
+  </div>
+  <div>
+      <label for="fighter2">Fighter 2: </label>
+      <input id="fighter2">
+    </div>
+  <div>
+      <button id="predict-button">Predict</button>
+      <p>Fighter 1: <span id="p0"></span></p>
+      <p>Fighter 2: <span id="p1"></span></p>
+  </div>
+
+<script>
+
+  $("#predict-button").click(function(e) {
+      var f1_val = $("#fighter1").val()
+      var f2_val = $("#fighter2").val()
+
+      let message = {
+          f1: f1_val,
+          f2: f2_val
+      }
+
+
+      $.post("http://127.0.0.1:5000/fight_predictor_predict", JSON.stringify(message), function(response) {
+          
+        $("#p1").text(response.prediction[0].toFixed(4));
+        $("#p0").text(response.prediction[1].toFixed(4));
+          
+          
+      });
+  })
+</script>
+
+</body>
+</html>
+
+

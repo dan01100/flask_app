@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Speech Recognition</title>
+</head>
+
+<body>
+    <p>Upload a ~1 second wav file (everything after 1 sec will be truncated)</p>
+
+    <input id = "audio-selector" type="file"/>
+    <button id="predict-button">Predict</button>
+    <p>0: <span id="p0"></span></p>
+    <p>1: <span id="p1"></span></p>
+    <p>2: <span id="p2"></span></p>
+    <p>3: <span id="p3"></span></p>
+    <p>4: <span id="p4"></span></p>
+    <p>5: <span id="p5"></span></p>
+    <p>6: <span id="p6"></span></p>
+    <p>7: <span id="p7"></span></p>
+    <p>8: <span id="p8"></span></p>
+    <p>9: <span id="p9"></span></p>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+
+        let base64audio;
+        $("#audio-selector").change(function() {
+            let reader = new FileReader();
+            reader.onload = function(e) {
+                let dataURL = reader.result;
+                base64audio = dataURL.replace("data:audio/wav;base64", "");
+            }
+            reader.readAsDataURL($("#audio-selector")[0].files[0]);
+        })
+
+
+        $("#predict-button").click(function(e) {
+
+            let message = {
+                image: base64audio
+            }
+
+            $.post("http://127.0.0.1:5000/number_recognition_predict", JSON.stringify(message), function(response) {
+                console.log("here")
+                for (i = 0; i < 10; i++) {
+                    $("#p" + i).text(response.prediction[i].toFixed(4));
+                }
+            });
+        })
+
+    </script>
+
+</body>
+</html>

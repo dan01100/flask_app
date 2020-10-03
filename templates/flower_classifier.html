@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Flower Classifier</title>
+</head>
+
+<body>
+    <p>Upload a png file:</p>
+
+    <input id = "image-selector" type="file"/>
+    <button id="predict-button">Predict</button>
+    <p>Daffodil: <span id="p0"></span></p>
+    <p>Snowdrop: <span id="p1"></span></p>
+    <p>Lily Valley: <span id="p2"></span></p>
+    <p>Bluebell: <span id="p3"></span></p>
+    <p>Crocus: <span id="p4"></span></p>
+    <p>Iris: <span id="p5"></span></p>
+    <p>Tiger Lily: <span id="p6"></span></p>
+    <p>Tulip (yellow): <span id="p7"></span></p>
+    <p>Fritillary: <span id="p8"></span></p>
+    <p>Sunflower: <span id="p9"></span></p>
+    <p>Daisy: <span id="p10"></span></p>
+    <p>Colts foot: <span id="p11"></span></p>
+    <p>Dandelion: <span id="p12"></span></p>
+    <p>Cowslip: <span id="p13"></span></p>
+    <p>Buttercup: <span id="p14"></span></p>
+    <p>Windflower: <span id="p15"></span></p>
+    <p>Pansy: <span id="p16"></span></p>
+
+
+    <img id="selected-image" src=""/>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+
+        let base64Image;
+        $("#image-selector").change(function() {
+            let reader = new FileReader();
+            reader.onload = function(e) {
+                let dataURL = reader.result;
+                $("#selected-image").attr("src", dataURL);
+                base64Image = dataURL.replace("data:image/png;base64", "");
+            }
+            reader.readAsDataURL($("#image-selector")[0].files[0]);
+        })
+
+        $("#predict-button").click(function(e) {
+            let message = {
+                image: base64Image
+            }
+
+            $.post("http://127.0.0.1:5000/flower_classifier_predict", JSON.stringify(message), function(response) {
+                for (i = 0; i < 17; i++) {
+                    $("#p" + i).text(response.prediction[i].toFixed(4));
+                }  
+            });
+        })
+
+    </script>
+</body>
+</html>
