@@ -48,31 +48,10 @@ def predict():
     image = Image.open(io.BytesIO(decoded))
     preprocessed_image = flower_classifier.preprocess_image(image, target_size=(224, 224))
 
-    prediction = flower_classifier.model.predict(preprocessed_image).tolist()
+    prediction = flower_classifier.model.predict(preprocessed_image).squeeze().tolist()
 
     response = {
-        'prediction' : [
-
-            prediction[0][0],
-            prediction[0][1],
-            prediction[0][2],
-            prediction[0][3],
-            prediction[0][4],
-            prediction[0][5],
-            prediction[0][6],
-            prediction[0][7],
-            prediction[0][8],
-            prediction[0][9],
-            prediction[0][10],
-            prediction[0][11],
-            prediction[0][12],
-            prediction[0][13],
-            prediction[0][14],
-            prediction[0][15],
-            prediction[0][16]
-
-
-        ]
+        'prediction' : prediction
     }
 
     return jsonify(response)
@@ -89,10 +68,7 @@ def predict2():
     if input == None:
 
         response = {
-            'prediction' : [
-                0,
-                0
-            ]
+            'prediction' : [0,0]
         }
 
         return jsonify(response)
@@ -103,15 +79,10 @@ def predict2():
     input = fight_predictor.std_scale.transform(input)
 
 
-    prediction = fight_predictor.model.predict_proba(input).tolist()
+    prediction = fight_predictor.model.predict_proba(input).squeeze().tolist()
 
     response = {
-        'prediction' : [
-
-            prediction[0][0],
-            prediction[0][1],
-
-        ]
+        'prediction' : prediction
     }
 
     return jsonify(response)
@@ -138,24 +109,10 @@ def predict3():
                                 hop_length=number_recognition.HOP_LENGTH, 
                                 n_fft=number_recognition.N_FFT)
 
-    prediction = number_recognition.model.predict(MFFCs.T.reshape((1,44,13, 1))).tolist()
+    prediction = number_recognition.model.predict(MFFCs.T.reshape((1,44,13, 1))).squeeze().tolist()
 
     response = {
-        'prediction' : [
-
-            prediction[0][0],
-            prediction[0][1],
-            prediction[0][2],
-            prediction[0][3],
-            prediction[0][4],
-            prediction[0][5],
-            prediction[0][6],
-            prediction[0][7],
-            prediction[0][8],
-            prediction[0][9],
-
-
-        ]
+        'prediction' : prediction
     }
 
     return jsonify(response)
